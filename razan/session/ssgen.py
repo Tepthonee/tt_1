@@ -23,7 +23,7 @@ def clear_screen():
 
 
 def get_api_id_and_hash():
-    print("jmthon session pyrogram")
+    print("tepthon session pyrogram")
     print("\n---------------------------\n")
     try:
         API_ID = int(input("Please enter your API ID: "))
@@ -62,11 +62,11 @@ def telethon_session():
     # logging in
     try:
         with TelegramClient(StringSession(), API_ID, API_HASH) as jmthon:
-            print("Generating a string session for •JMTHON•")
+            print("Generating a string session for •TEPTHON•")
             try:
                 jmthon.send_message(
                     "me",
-                    f"**هذا هو كود سيشن تيليثون الخاص بك**:\n\n`{jmthon.session.save()}`\n\n**لا تشارك هذا الكود مع اي مستخدم !**\n@jmthon",
+                    f"**هذا هو كود سيشن تيليثون الخاص بك**:\n\n`{jmthon.session.save()}`\n\n**لا تشارك هذا الكود مع اي مستخدم !**\n@Tepthone",
                 )
                 print(
                     "Your SESSION has been generated. Check your Telegram saved messages!"
@@ -90,7 +90,7 @@ def telethon_session():
     except Exception as er:
         print("Unexpected Error Occurred while Creating Session")
         print(er)
-        print("If you think It as a Bug, Report to @jmthon_support\n\n")
+        print("If you think It as a Bug, Report to @Tepthon_Help\n\n")
 
 
 def pyro_session():
@@ -128,7 +128,7 @@ def main():
     try:
         type_of_ss = int(
             input(
-                "\njmthon userbot\n\nWhich session do you want to generate?\n1. Telethon Session.\n2. Pyrogram Session.\n\nEnter choice:  "
+                "\ntepthon userbot\n\nWhich session do you want to generate?\n1. Telethon Session.\n2. Pyrogram Session.\n\nEnter choice:  "
             )
         )
     except Exception as e:
