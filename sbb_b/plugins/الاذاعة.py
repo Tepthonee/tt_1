@@ -1,4 +1,4 @@
-from sbb_b import sbb_b
+from tepthon import sbb_b
 
 GCAST_BLACKLIST = [
     -1001118102804,
