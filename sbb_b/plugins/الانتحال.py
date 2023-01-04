@@ -3,9 +3,9 @@ import html
 from telethon.tl import functions
 from telethon.tl.functions.users import GetFullUserRequest
 
-from sbb_b.Config import Config
-from sbb_b.sql_helper.globals import gvarstatus
-from sbb_b.plugins import ALIVE_NAME, BOTLOG, BOTLOG_CHATID, sbb_b, edit_delete, get_user_from_event
+from tepthon.Config import Config
+from tepthon.sql_helper.globals import gvarstatus
+from tepthon.plugins import ALIVE_NAME, BOTLOG, BOTLOG_CHATID, sbb_b, edit_delete, get_user_from_event
 
 DEFAULTUSER = gvarstatus("FIRST_NAME") or ALIVE_NAME
 DEFAULTUSERBIO = Config.DEFAULT_BIO or "﴿ لا تَحزَن إِنَّ اللَّهَ مَعَنا ﴾"
