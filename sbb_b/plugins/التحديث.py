@@ -23,7 +23,6 @@ from ..sql_helper.global_collection import (
 cmdhd = Config.COMMAND_HAND_LER
 ENV = bool(os.environ.get("ENV", False))
 LOGS = logging.getLogger(__name__)
-# -- Constants -- #
 
 HEROKU_APP_NAME = Config.HEROKU_APP_NAME or None
 HEROKU_API_KEY = Config.HEROKU_API_KEY or None
@@ -63,9 +62,11 @@ async def gen_chlog(repo, diff):
 
 
 async def print_changelogs(event, ac_br, changelog):
-    changelog_str = f"**⌔∮ تـحـديث جـديـد**\n\n**التغـييـرات:**\n`{changelog}`"
+    changelog_str = (
+        f"**• توفر تحديث جديد للفـرت [{ac_br}]:\n\nالتغييرات:**\n`{changelog}`"
+    )
     if len(changelog_str) > 4096:
-        await event.edit("**- التغييرات:**")
+        await event.edit("**• التغييرات كثيرة جدا لذلك تم وضعها في ملف**")
         with open("output.txt", "w+") as file:
             file.write(changelog_str)
         await event.client.send_file(
@@ -103,19 +104,19 @@ async def update_bot(event, repo, ups_rem, ac_br):
     except GitCommandError:
         repo.git.reset("--hard", "FETCH_HEAD")
     await update_requirements()
-    razan = await event.edit(
-        "**- تم التحديث بنجاح**\n" "جـار اعادة تشغيل البوت يرجى الانتظار"
-    )
-    await event.client.reload(razan)
+    jmthon = await event.edit("**• تم بنجاح التحديث جار اعادة التشغيل الان**")
+    await event.client.reload(jmthon)
 
 
 async def deploy(event, repo, ups_rem, ac_br, txt):
     if HEROKU_API_KEY is None:
-        return await event.edit("⌔∮ يرجى وضع فار ايبي كي هيروكو للتحديث")
+        return await event.edit("**• يرجى وضع فار HEROKU_API_KEY للتحديث**")
     heroku = heroku3.from_key(HEROKU_API_KEY)
     heroku_applications = heroku.apps()
     if HEROKU_APP_NAME is None:
-        await event.edit("**- يجب عليك وضع فار اسم التطبيق الخاص بك للتحديث**")
+        await event.edit(
+            "**• يرجى وضع فار HEROKU_APP_NAME**" " لتتمكن من تحديث السورس "
+        )
         repo.__del__()
         return
     heroku_app = next(
@@ -124,12 +125,10 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
     )
 
     if heroku_app is None:
-        await event.edit(
-            f"{txt}\n" "هنالك خطأ في التطبيق الخاص بك من اسم التطبيق او الدينو الخاص بك"
-        )
+        await event.edit(f"{txt}\n" "**• خطأ في التعرف على تطبيق هيروكو**")
         return repo.__del__()
-    razan = await event.edit(
-        "**الان يتم تنصيب تحديث جمثـون ، يرجى الانتظار حتى تنتهي العملية ، وعادة ما يستغرق التحديث من 4 إلى 5 دقائق.**"
+    jmthon = await event.edit(
+        "**• جار اعادة تشغيل الدينو الان يرجى الانتظار من 2-5 دقائق**"
     )
     try:
         ulist = get_collectionlist_items()
@@ -139,7 +138,7 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
     except Exception as e:
         LOGS.error(e)
     try:
-        add_to_collectionlist("restart_update", [razan.chat_id, razan.id])
+        add_to_collectionlist("restart_update", [jmthon.chat_id, jmthon.id])
     except Exception as e:
         LOGS.error(e)
     ups_rem.fetch(ac_br)
@@ -156,19 +155,19 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
     try:
         remote.push(refspec="HEAD:refs/heads/master", force=True)
     except Exception as error:
-        await event.edit(f"{txt}\n**نص الخطأ:**\n`{error}`")
+        await event.edit(f"{txt}\n**تقرير الخطأ:**\n`{error}`")
         return repo.__del__()
     build_status = heroku_app.builds(order_by="created_at", sort="desc")[0]
     if build_status.status == "failed":
         return await edit_delete(
-            event, "الانشاء فشل\n" "يبدو انه تم الغاء العمليه او حدث خطا ما"
+            event, "**• فشل التحديث**\n" "يبدو أنه تم الغاءه او حصل خطأ ما"
         )
     try:
         remote.push("master:main", force=True)
     except Exception as error:
-        await event.edit(f"{txt}\n**هذا هو نص الخطأ الخاص بك:**\n`{error}`")
+        await event.edit(f"{txt}\n**تقرير الخطأ:**\n`{error}`")
         return repo.__del__()
-    await event.edit("⌔∮ لقد حدث خطأ أثناء التحديث ارسل  `.اعادة تشغيل`")
+    await event.edit("**• فشل التحديث ارسل** `.اعادة تشغيل` **للتحديث**")
     with contextlib.suppress(CancelledError):
         await event.client.disconnect()
         if HEROKU_APP is not None:
@@ -178,26 +177,30 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
 @sbb_b.ar_cmd(pattern="تحديث(| الان)?$")
 async def upstream(event):
     conf = event.pattern_match.group(1).strip()
-    event = await edit_or_reply(event, "⌔∮ يتم البحث على التحديثات ام وجدت")
+    event = await edit_or_reply(
+        event, "**• جار البحث عن التحديثات يرجى الانتظار قليلا**"
+    )
     off_repo = UPSTREAM_REPO_URL
     force_update = False
     if ENV and (HEROKU_API_KEY is None or HEROKU_APP_NAME is None):
         return await edit_or_reply(
-            event, "⌔∮ يجب عليك وضع الفارات المطلوبة لتحديث تيبثون"
+            event, "**• عليك وضع فارات هيروكو المطلوبة للتحديث**"
         )
     try:
-        txt = "**⌔∮ عذرا لم يتم اكمال التحديث بسبب بعض الاخطاء " + "**اللوگ:**\n"
+        txt = "فشل في التحديث لسورس تيبثون " + "**• حدث خطأ ما :**\n"
 
         repo = Repo()
     except NoSuchPathError as error:
-        await event.edit(f"{txt}\nالفولدر {error} لم يتم ايجاده")
+        await event.edit(f"{txt}\nالمجلد {error} لم يتم أيجاده")
         return repo.__del__()
     except GitCommandError as error:
-        await event.edit(f"{txt}\nخطأ مبكر {error}")
+        await event.edit(f"{txt}\nفشل مبكر {error}")
         return repo.__del__()
-    except InvalidGitRepositoryError:
+    except InvalidGitRepositoryError as error:
         if conf is None:
-            return await event.edit(f"للتحديث ارسل `.تحديث الان.`")
+            return await event.edit(
+                f"**• للأسف المجلد {error} لا يبدة انه خاص لسورس معين.\nيمكنك اصلاح هذه المشكلة بأرسال. `.تحديث التنصيب`"
+            )
 
         repo = Repo.init()
         origin = repo.create_remote("upstream", off_repo)
@@ -210,7 +213,10 @@ async def upstream(event):
     if ac_br != UPSTREAM_REPO_BRANCH:
         await event.edit(
             "**[التحديث]:**\n"
-            f"- يبدو انك تستحدم فرع خاص بك لذلك يعذر تحديثه ({ac_br}). "
+            f"يبدو أنك تستخدم فرع أخر: ({ac_br}). "
+            "في هذه الحالة غير قادر على التحديث "
+            "لملفات الفرع الخاص بك. "
+            "يرجى استخدام الفرغ الاساسي"
         )
         return repo.__del__()
     with contextlib.suppress(BaseException):
@@ -220,17 +226,22 @@ async def upstream(event):
     changelog = await gen_chlog(repo, f"HEAD..upstream/{ac_br}")
     # Special case for deploy
     if changelog == "" and not force_update:
-        await event.edit("\n⌔∮ عزيز المستخدم انت تستخدم اخر اصدار من تيبثون 🫂♥")
+        await event.edit(
+            "\n**• سورس تيبثون محدث الى أخر اصدار❤️**"
+            f"**\n الفـرع: {UPSTREAM_REPO_BRANCH}**\n"
+        )
         return repo.__del__()
     if conf == "" and not force_update:
         await print_changelogs(event, ac_br, changelog)
         await event.delete()
-        return await event.respond(f"ارسل `{cmdhd}تحديث الان` لتحديث سورس تيبثون")
+        return await event.respond(
+            f"**• ارسل** `{cmdhd}تحديث التنصيب` لتحديث سورس تيبثون"
+        )
 
     if force_update:
-        await event.edit("- يتم التحديث الاجباري لأخر اصدار من السورس انتظر قليلا")
+        await event.edit("**• جار التحديث الاجباري الى اخر اصدار انتظر قليلا**")
     if conf == "الان":
-        await event.edit("⌔∮ جارِ تحديث تيبثون يرجى الأنتظار قليلا")
+        await event.edit("**• جار تحديث سورس تيبثون أنتظر قليلا**")
         await update_bot(event, repo, ups_rem, ac_br)
     return
 
@@ -242,25 +253,25 @@ async def upstream(event):
     if ENV:
         if HEROKU_API_KEY is None or HEROKU_APP_NAME is None:
             return await edit_or_reply(
-                event, "⌔∮ يجب عليك وضع الفارات المطلوبة لتحديث تيبثون"
+                event, "**• يجب عليك وضع فارات هيروكو المطلوبة للتحديث**"
             )
     elif os.path.exists("config.py"):
         return await edit_delete(
             event,
-            f"⌔∮ يبدو انك نصبت تيبثون عبر السيرفر يرجى ارسال `{cmdhd}تحديث الان`",
+            f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}تحديث الان`",
         )
-    event = await edit_or_reply(event, "⌔∮ يتم الان الوصول الى معلومات التحديث انتظر")
+    event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**")
     off_repo = "https://github.com/Tepthonee/tt_1"
     os.chdir("/app")
     try:
-        txt = "**⌔∮ عذرا لم يتم اكمال التحديث بسبب بعض الاخطاء " + "**اللوگ:**\n"
+        txt = "**• لقد حدث خطأ اثناء التحديث**" + "**لقد حدث خطأ ما**\n"
 
         repo = Repo()
     except NoSuchPathError as error:
-        await event.edit(f"{txt}\n- الفولدر {error} لم يتم العثور عليه")
+        await event.edit(f"{txt}\n•المجلد  {error} لم يتم ايجاده")
         return repo.__del__()
     except GitCommandError as error:
-        await event.edit(f"{txt}\n- فشل مبكر {error}")
+        await event.edit(f"{txt}\n• فشل مبكر الخطا: {error}")
         return repo.__del__()
     except InvalidGitRepositoryError:
         repo = Repo.init()
@@ -274,5 +285,5 @@ async def upstream(event):
     ac_br = repo.active_branch.name
     ups_rem = repo.remote("upstream")
     ups_rem.fetch(ac_br)
-    await event.edit("- يتم تحديث السورس يرجى الانتظار قليلا")
+    await event.edit("**• جار الان التحديث أنتظر قليلا**")
     await deploy(event, repo, ups_rem, ac_br, txt)
