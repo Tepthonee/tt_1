@@ -1,7 +1,7 @@
 from telethon import functions
 from telethon.sync import errors
 
-from sbb_b import sbb_b
+from tepthon import sbb_b
 
 
 @sbb_b.ar_cmd(pattern="كروباتي$")
