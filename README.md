@@ -1,4 +1,4 @@
-<p align="center"><a href="https://t.me/Tepthone"><img src="https://telegra.ph/file/f8505be4323901b707dc9.jpg" width="5000"></a></p>
+<p align="center"><a href="https://t.me/Tepthone"><img src="https://telegra.ph/file/78d4b06400957403fec24.jpg" width="5000"></a></p>
 <h1 align="center"><b>TEPTHON_USERBOT 🇮🇶 </b></h1>
 <h4 align="center">𓆰♥️🧸 𝐖𝐞𝐥𝐂𝐨𝐦𝐞 𝑻𝐨 𝙎𝙊𝙐𝙍CE 𝐓𝐄𝐏𝐓𝐇𝐎𝐍↷.</h4>
 
