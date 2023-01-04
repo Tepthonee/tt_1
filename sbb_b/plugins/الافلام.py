@@ -3,7 +3,7 @@ import os
 from justwatch import JustWatch, justwatchapi
 from pySmartDL import SmartDL
 
-from sbb_b import sbb_b
+from tepthon import sbb_b
 
 from ..Config import Config
 from ..core.logger import logging
