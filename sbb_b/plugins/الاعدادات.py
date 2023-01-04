@@ -2,7 +2,7 @@ import os
 from asyncio.exceptions import CancelledError
 from time import sleep
 
-from sbb_b import sbb_b
+from tepthon import sbb_b
 
 from ..core.logger import logging
 from ..core.managers import edit_or_reply
