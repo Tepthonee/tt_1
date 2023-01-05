@@ -8,7 +8,7 @@ import asyncio
 from telethon import events
 c = requests.session()
 bot_username = '@t06bot'
-jepthon = ['yes']
+tepthon = ['yes']
 
 
 @sbb_b.on(admin_cmd(pattern="(تجميع النقاط|تجميع نقاط)"))
