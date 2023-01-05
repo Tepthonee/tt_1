@@ -13,7 +13,7 @@ tepthon = ['yes']
 
 @sbb_b.on(admin_cmd(pattern="(تجميع النقاط|تجميع نقاط)"))
 async def _(event):
-    if jepthon[0] == "yes":
+    if tepthon[0] == "yes":
         await event.edit("**᯽︙سيتم تجميع النقاط , قبل كل شي تأكد من انك قمت بلانظمام الى القنوات الاشتراك الاجباري للبوت لعدم حدوث اخطاء**")
         channel_entity = await sbb_b.get_entity(bot_username)
         await sbb_b.send_message('@t06bot', '/start')
@@ -26,7 +26,7 @@ async def _(event):
 
         chs = 1
         for i in range(100):
-            if jepthon[0] == 'no':
+            if tepthon[0] == 'no':
                 break
             await asyncio.sleep(5)
 
