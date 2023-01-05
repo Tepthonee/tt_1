@@ -11,7 +11,7 @@ from telethon.errors.rpcerrorlist import (
 )
 from telethon.events import CallbackQuery
 
-from sbb_b import StartTime, sbb_b, JMVERSION
+from sbb_b import StartTime, sbb_b, JEPVERSION
 
 from ..Config import Config
 from ..core.managers import edit_or_reply
