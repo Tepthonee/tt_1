@@ -66,7 +66,7 @@ def telethon_session():
             try:
                 jmthon.send_message(
                     "me",
-                    f"*هذا هو كود سيشن تيليثون الخاص بك:\n\n`{jmthon.session.save()}`\n\nلا تشارك هذا الكود مع اي مستخدم !*\n@Tepthone",
+                    f"**هذا هو كود سيشن تيليثون الخاص بك**:\n\n`{jmthon.session.save()}`\n\n**لا تشارك هذا الكود مع اي مستخدم ما عدا منصات التنصيب 🧸♥️ !**\n@Tepthon",
                 )
                 print(
                     "Your SESSION has been generated. Check your Telegram saved messages!"
@@ -111,11 +111,13 @@ def pyro_session():
     # generate a session
     API_ID, API_HASH = get_api_id_and_hash()
     print("Enter phone number when asked.\n\n")
-    with Client(":memory:", api_id=API_ID, api_hash=API_HASH) as pyro:
+    with Client(
+        name="jmthon", api_id=API_ID, api_hash=API_HASH, in_memory=True
+    ) as pyro:
         ss = pyro.export_session_string()
         pyro.send_message(
             "me",
-            f"`{ss}`\n\n*الكود الذي في الاعلى هو كود سيشن بايروجرام لا تشاركه مع اي احد كود مهم وخطير*",
+            f"`{ss}`\n\n**الكود الذي في الاعلى هو كود سيشن بايروجرام لا تشاركه مع اي احد كود مهم وخطير ♥️🧸 @Tepthon**",
         )
         print("Session has been sent to your saved messages!")
         exit(0)
