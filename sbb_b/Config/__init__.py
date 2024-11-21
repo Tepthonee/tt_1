@@ -1,1 +1,1 @@
-from .tep_config import Config
+from .tep_config import ..
