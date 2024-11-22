@@ -1,1 +1,1 @@
-from .Config import Config
+from .Config import Config.py
